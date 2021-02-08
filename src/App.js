@@ -1,25 +1,68 @@
-import logo from './logo.svg';
+import React, {Component} from 'react';
 import './App.css';
 
-function App() {
+const api = {
+  key:'3df22446f8b0ba135cf066f0ba035bf2',
+  base:'https://api.openweathermap.org/data/2.5/'
+}
+class App extends Component {
+    state = {
+      temperature: '',
+      city: 'Poznan',
+      background: '',
+    }
+  
+  getWeather(){
+    
+    fetch(`${api.base}weather?q=${this.state.city}&appid=${api.key}`)
+    .then(res => res.json())
+    .then(result => {
+
+      if(Math.round(result.main.temp-273.15)>10){
+        this.setState({
+           background: ' warm'
+        })
+      }else{
+        this.setState({
+          background: ' cold'
+        })
+      }
+      this.setState({temperature: Math.round(result.main.temp - 273.15)})
+    })
+  }
+
+
+  
+  componentDidMount(){
+    this.getWeather();
+
+    // if(this.state.temperature > 10){
+    //   this.setState({
+    //     background: ' cold',
+    //   })
+    // }
+    // else{
+    //   this.setState({
+    //     background: ' warm',
+    //   })
+    // }
+
+  }
+
+  render(){
+    console.log(this.state.temperature)
   return (
+    
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <main className = {'wrapper' + this.state.background}>
+          <input type="text" placeholder = 'Search...' className = 'location-search'/>
+          <div className="location-info">Poznań</div>
+          <div className="date">07.02.2021</div>
+          <div className="weather-data">{this.state.temperature}<sup>o</sup>C</div>
+      </main>
     </div>
   );
+  }
 }
 
 export default App;
