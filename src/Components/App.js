@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import './App.css';
+import WeatherComponent from './WeatherComponent';
 
 const api = {
   key:'3df22446f8b0ba135cf066f0ba035bf2',
@@ -8,9 +9,10 @@ const api = {
 class App extends Component {
     state = {
       temperature: '',
-      city: 'Poznan',
+      city: 'Poznań',
       background: '',
       date: '',
+      humidity: '',
     }
   
 
@@ -50,7 +52,10 @@ class App extends Component {
           background: ' cold'
         })
       }
-      this.setState({temperature: Math.round(result.main.temp - 273.15)})
+      this.setState({
+        temperature: Math.round(result.main.temp - 273.15),
+        humidity: result.main.humidity
+      })
     })
   }
 
@@ -78,12 +83,14 @@ class App extends Component {
   return (
     
     <div className="App">
-      <main className = {'wrapper' + this.state.background}>
+      {/* <main className = {'wrapper' + this.state.background}>
           <input type="text" placeholder = 'Search...' className = 'location-search' onChange = {this.changeHandler.bind(this)} onKeyUp = {this.searchSubmit}/>
           <div className="location-info">{this.state.city}</div>
           <div className="date">{this.state.date}</div>
-          <div className="weather-data">{this.state.temperature}<sup>o</sup>C</div>
-      </main>
+          <div className="weather-data temperature">{this.state.temperature}<sup>o</sup>C</div>
+          <div className="weather-data humidity">{this.state.humidity}%</div>
+      </main> */}
+      <WeatherComponent {...this.state} click = {this.searchSubmit} change = {this.changeHandler.bind(this)} />
     </div>
   );
   }
